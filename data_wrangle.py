@@ -43,5 +43,5 @@ def prep_data(data):
                     mnth = lambda x: x['dteday'].dt.month,
                     yr = data['yr'].ffill()
                    )
-            .drop('dteday', axis=1)
+            .drop(['dteday', 'casual','registered'], axis=1)
            )
