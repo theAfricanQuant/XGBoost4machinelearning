@@ -9,3 +9,7 @@ I will be pulling heavily from these books listed in the references
 - Harrison, M. (2023). *Effective XGBoost: Tuning, Understanding, and Deploying Classification Models*. MetaSnake.
 - Harrison, M. (2021). *Effective Pandas: Patterns for Data Manipulation*. Independently published.
 
+## Discord Channel
+
+There is a discord channel for this project. You can join the conversation there by clicking on this [link](https://discord.gg/TYCZn2GK5T). 
+
