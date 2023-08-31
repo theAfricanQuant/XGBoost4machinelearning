@@ -21,13 +21,15 @@ def get_data(url):
         pd.read_csv(url)
     )
 
-def mean_vals(df, idx1, idx2, col):
-    return (
-        (df.iloc[idx1][col] + 
-        df.iloc[idx2][col])/2
-    )
+
 
 def prep_data(data):
+
+    def mean_vals(df, idx1, idx2, col):
+        return (
+            (df.iloc[idx1][col] + 
+            df.iloc[idx2][col])/2
+        )
     return (data
             .assign(windspeed = data["windspeed"]
                     .fillna((data["windspeed"]
