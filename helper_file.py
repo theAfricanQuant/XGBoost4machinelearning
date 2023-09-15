@@ -200,3 +200,45 @@ def grid_search_optim(df, trgt_vect, params, model):
     print(f'Test score: {rmse_test:.3f}')
 
 
+def randomized_search_clf(df, trgt_vect, params, model, runs=20):
+    """
+    Ah, hello there! Welcome to the exciting journey of optimizing a classifier!
+    
+    This function takes in a data frame and a bunch of other parameters and does a little dance with 
+    RandomizedSearchCV to find the best model settings. You see, instead of testing every single 
+    combination of hyperparameters (which can be a bit like watching paint dry), we're going to 
+    smartly sample a few combinations randomly. It's a quicker way to get us a good-enough model without 
+    spending an eternity on it.
+    
+    Parameters:
+    df (DataFrame): The data frame containing your data.
+    trgt_vect (Series): The target variable you're trying to predict.
+    params (dict): The range of hyperparameters you want to test out.
+    runs (int, optional): The number of random combinations to try. Defaults to 20.
+    model (estimator object): The base model you want to optimize.
+    
+    Returns:
+    best_model (estimator object): The optimized model that performed the best in our little experiment.
+    
+    Now, let's roll up our sleeves and let the computer do the heavy lifting!
+    """
+    
+    X, y = splitX_y(df, trgt_vect)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=43)
+    
+    rand_clf = RandomizedSearchCV(model, params, n_iter=runs, cv=5, n_jobs=-1, random_state=43)
+    rand_clf.fit(X_train, y_train)
+
+    best_model = rand_clf.best_estimator_
+    best_score = rand_clf.best_score_
+
+    print(f"Training score: {best_score:.3f}")
+
+    y_pred = best_model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+
+    print(f'Test score: {accuracy:.3f}')
+
+    return best_model
