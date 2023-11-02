@@ -8,6 +8,13 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn import model_selection
 
+from sklearn.model_selection import (train_test_split, cross_val_score, 
+                        StratifiedKFold, GridSearchCV, RandomizedSearchCV)
+
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score
+
+
 from sklearn.model_selection import cross_val_score
 
 from category_encoders import OneHotEncoder
@@ -242,3 +249,25 @@ def randomized_search_clf(df, trgt_vect, params, model, runs=20):
     print(f'Test score: {accuracy:.3f}')
 
     return best_model
+
+def grid_search(df, trgt_vect, params, random=False): 
+
+    X, y = splitX_y(df, trgt_vect)
+    
+    xgb = XGBClassifier(booster='gbtree', objective='binary:logistic', random_state=43)
+    
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
+    
+    grid = (
+        RandomizedSearchCV(xgb, params, cv=kfold, n_iter=20, n_jobs=-1, random_state=43) 
+        if random 
+        else GridSearchCV(xgb, params, cv=kfold, n_jobs=-1)
+    )
+    
+    # Fit and extract information in a chained manner
+    grid.fit(X, y)
+
+    # Print best params and score using f-string formatting
+    print(f"Best params: {grid.best_params_}")
+    print(f"Best score: {grid.best_score_:.5f}")
+    return print("search completed!")
