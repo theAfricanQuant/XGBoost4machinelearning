@@ -250,18 +250,20 @@ def randomized_search_clf(df, trgt_vect, params, model, runs=20):
 
     return best_model
 
-def grid_search(df, trgt_vect, params, random=False): 
+def grid_search(df, trgt_vect, params, random=False, 
+                scoring=None, weight=None): 
 
     X, y = splitX_y(df, trgt_vect)
     
-    xgb = XGBClassifier(booster='gbtree', objective='binary:logistic', random_state=43)
+    xgb = XGBClassifier(booster='gbtree', objective='binary:logistic', 
+                        random_state=43, scale_pos_weight=weight)
     
     kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=43)
     
     grid = (
-        RandomizedSearchCV(xgb, params, cv=kfold, n_iter=20, n_jobs=-1, random_state=43) 
+        RandomizedSearchCV(xgb, params, cv=kfold, n_iter=20, n_jobs=-1, random_state=43, scoring=scoring) 
         if random 
-        else GridSearchCV(xgb, params, cv=kfold, n_jobs=-1)
+        else GridSearchCV(xgb, params, cv=kfold, n_jobs=-1, scoring=scoring)
     )
     
     # Fit and extract information in a chained manner
